@@ -15,7 +15,7 @@ const ButtonList = () => {
   return (
     <div className="flex">
       {topics.map((topic) => (
-        <Button name={topic} />
+        <Button key={topic} name={topic} />
       ))}
     </div>
   );

@@ -1,12 +1,32 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { toggleSideMenu } from "../store/slices/appSlice";
+import { YT_SEARCH_API } from "../utils/constants";
 
 const Head = () => {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [suggestions, setSuggestions] = useState([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
   const dispatch = useDispatch();
   const toggleMenuHandler = () => {
     dispatch(toggleSideMenu());
   };
+
+  useEffect(() => {
+    const timer = setTimeout(() => getSearchSuggestion(), 200);
+
+    // this cleanup function will be called react destoys this component before re-rendering it.
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [searchQuery]);
+
+  const getSearchSuggestion = async () => {
+    const data = await fetch(YT_SEARCH_API + searchQuery);
+    const jsonData = await data.json();
+    setSuggestions(jsonData[1]);
+  };
+
   return (
     <div className="grid grid-flow-col p-2 shadow-lg">
       <div className="flex col-span-1">
@@ -24,18 +44,38 @@ const Head = () => {
           />
         </a>
       </div>
-      <div className="col-span-10 px-10 flex">
-        <input
-          className="w-1/2 border border-gray-400 p-2 rounded-l-full h-8"
-          type="text"
-        />
-        <button className="border border-gray-400 rounded-r-full h-8 px-2 flex items-center justify-center bg-gray-100">
-          <img
-            className="h-4"
-            alt="search-icon"
-            src="https://img.icons8.com/ios7/600/search.png"
+      <div className="col-span-10 px-10">
+        <div className="flex">
+          <input
+            className="w-1/2 border border-gray-400 p-2 rounded-l-full h-8"
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onFocus={() => setShowSuggestions(true)}
+            onBlur={() => setShowSuggestions(false)}
           />
-        </button>
+          <button className="border border-gray-400 rounded-r-full h-8 px-2 flex items-center justify-center bg-gray-100">
+            <img
+              className="h-4"
+              alt="search-icon"
+              src="https://img.icons8.com/ios7/600/search.png"
+            />
+          </button>
+        </div>
+        {suggestions.length && showSuggestions ? (
+          <div className="fixed bg-white py-2 px-2 w-[36.5rem] z-10 shadow-md rounded-sm border border-gray-100">
+            <ul>
+              {suggestions.map((suggestion) => (
+                <li
+                  key={suggestion}
+                  className="py-1 px-1 rounded-md hover:bg-gray-100"
+                >
+                  {suggestion}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : null}
       </div>
 
       <div className="col-span-1">
