@@ -1,16 +1,22 @@
 import React from "react";
 import Button from "./Button";
 
+const topics = [
+  "All",
+  "Tech",
+  "Music",
+  "Meditation",
+  "Top",
+  "Science",
+  "Funny",
+];
+
 const ButtonList = () => {
   return (
     <div className="flex">
-      <Button name="All" />
-      <Button name="Tech" />
-      <Button name="Music" />
-      <Button name="Meditation" />
-      <Button name="Top" />
-      <Button name="Science" />
-      <Button name="Funny" />
+      {topics.map((topic) => (
+        <Button name={topic} />
+      ))}
     </div>
   );
 };
