@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { toggleSideMenu } from "../store/slices/appSlice";
 import { YT_SEARCH_API } from "../utils/constants";
 import { setSuggestion } from "../store/slices/searchSuggestionsSlice";
+import { Link } from "react-router-dom";
 
 const Head = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -18,7 +19,7 @@ const Head = () => {
     const timer = setTimeout(() => {
       if (searchQuery && searchSuggestions[searchQuery]) {
         setSuggestions(searchSuggestions[searchQuery]);
-      } else {
+      } else if (searchQuery.length) {
         getSearchSuggestion();
       }
     }, 200);
@@ -87,12 +88,16 @@ const Head = () => {
         {suggestions.length && showSuggestions ? (
           <div className="fixed bg-white py-2 px-2 w-[36.5rem] z-10 shadow-md rounded-sm border border-gray-100">
             <ul>
+              {/* NOTE: A <Link> (which renders to <a>) should not wrap a <li>. This breaks semantics and browser behavior, especially when React Router tries to handle navigation. */}
               {suggestions.map((suggestion) => (
                 <li
                   key={suggestion}
                   className="py-1 px-1 rounded-md hover:bg-gray-100"
+                  onMouseDown={(e) => e.preventDefault()} // prevent blur on click
                 >
-                  {suggestion}
+                  <Link className="w-[100%]" to={`/search?text=${suggestion}`}>
+                    {suggestion}
+                  </Link>
                 </li>
               ))}
             </ul>
