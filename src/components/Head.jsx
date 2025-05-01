@@ -104,7 +104,7 @@ const Head = () => {
         <img
           className="h-8"
           alt="profile"
-          src="https://images.rawpixel.com/image_png_800/cHJpdmF0ZS9sci9pbWFnZXMvd2Vic2l0ZS8yMDIzLTAxL3JtNjA5LXNvbGlkaWNvbi13LTAwMi1wLnBuZw.png"
+          src="https://www.iconpacks.net/icons/2/free-user-icon-3296-thumb.png"
         />
       </div>
     </div>
