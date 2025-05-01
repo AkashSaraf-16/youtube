@@ -29,6 +29,18 @@ const Head = () => {
     };
   }, [searchQuery]);
 
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowSuggestions(false);
+    };
+
+    document.addEventListener("scroll", handleScroll);
+
+    return () => {
+      document.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
   const getSearchSuggestion = async () => {
     const data = await fetch(YT_SEARCH_API + searchQuery);
     const jsonData = await data.json();
@@ -61,6 +73,7 @@ const Head = () => {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             onFocus={() => setShowSuggestions(true)}
+            onClick={() => setShowSuggestions(true)}
             onBlur={() => setShowSuggestions(false)}
           />
           <button className="border border-gray-400 rounded-r-full h-8 px-2 flex items-center justify-center bg-gray-100">
