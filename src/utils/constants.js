@@ -6,3 +6,5 @@ export const YT_SEARCH_API =
 export const YT_COMMENTS_API = `https://www.googleapis.com/youtube/v3/commentThreads?key=${process.env.REACT_APP_YT_API_KEY}&textFormat=plainText&part=snippet&maxResults=5&videoId=`;
 
 export const YT_SEARCH_VIDEOS = `https://www.googleapis.com/youtube/v3/search?part=snippet,id&maxResults=20&key=${process.env.REACT_APP_YT_API_KEY}&q=`;
+
+export const OFFSET_LIVE_CHAT = 15;
