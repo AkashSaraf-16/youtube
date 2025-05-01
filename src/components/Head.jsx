@@ -1,19 +1,27 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { toggleSideMenu } from "../store/slices/appSlice";
 import { YT_SEARCH_API } from "../utils/constants";
+import { setSuggestion } from "../store/slices/searchSuggestionsSlice";
 
 const Head = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const searchSuggestions = useSelector((state) => state.searchSuggestions);
   const dispatch = useDispatch();
   const toggleMenuHandler = () => {
     dispatch(toggleSideMenu());
   };
 
   useEffect(() => {
-    const timer = setTimeout(() => getSearchSuggestion(), 200);
+    const timer = setTimeout(() => {
+      if (searchQuery && searchSuggestions[searchQuery]) {
+        setSuggestions(searchSuggestions[searchQuery]);
+      } else {
+        getSearchSuggestion();
+      }
+    }, 200);
 
     // this cleanup function will be called react destoys this component before re-rendering it.
     return () => {
@@ -25,6 +33,7 @@ const Head = () => {
     const data = await fetch(YT_SEARCH_API + searchQuery);
     const jsonData = await data.json();
     setSuggestions(jsonData[1]);
+    dispatch(setSuggestion({ key: searchQuery, value: jsonData[1] }));
   };
 
   return (
